@@ -3,6 +3,7 @@ package com.example.relativelayoutactivity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+                progressDialog.setMessage("Logging in...");
+                progressDialog.setCancelable(false); // Set to true if you want the user to be able to cancel the login process.
+                progressDialog.show();
                 String username = edUsername.getText().toString();
                 String password = edPassword.getText().toString();
 
@@ -47,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                             .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
+
                                     if (task.isSuccessful()) {
                                         FirebaseUser user = mAuth.getCurrentUser();
                                         if (user != null) {
@@ -66,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                                         // Authentication failed
                                         Toast.makeText(getApplicationContext(), "Invalid Username and Password", Toast.LENGTH_SHORT).show();
                                     }
+                                    progressDialog.dismiss();
                                 }
                             });
                 }
